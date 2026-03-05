@@ -5,7 +5,12 @@ interface Props {
   onClear: () => void;
 }
 
-const operatorOptions = ["=", ">=", "<="];
+const operatorOptions = [
+  { label: "Exactly", value: "=" },
+  { label: "At least", value: ">=" },
+  { label: "At most", value: "<=" },
+];
+
 const numericFields = ["rating", "total_time", "calories"];
 
 const FiltersBar = ({ onApply, onClear }: Props) => {
@@ -17,7 +22,6 @@ const FiltersBar = ({ onApply, onClear }: Props) => {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // Validate ONLY numeric fields
   const validateNumericField = (key: string, value: string) => {
     if (!value) return "";
 
@@ -33,7 +37,6 @@ const FiltersBar = ({ onApply, onClear }: Props) => {
   const update = (key: string, value: string) => {
     setForm((prev) => ({ ...prev, [key]: value }));
 
-    // Only validate numeric fields
     if (numericFields.includes(key)) {
       const error = validateNumericField(key, value);
       setErrors((prev) => ({ ...prev, [key]: error }));
@@ -44,7 +47,6 @@ const FiltersBar = ({ onApply, onClear }: Props) => {
     setOperators((prev) => ({ ...prev, [key]: value }));
   };
 
-  // ✅ IMPORTANT FIX HERE
   const hasError = numericFields.some(
     (field) => form[field] && errors[field]
   );
@@ -87,15 +89,17 @@ const FiltersBar = ({ onApply, onClear }: Props) => {
 
         {/* Rating */}
         <div className="flex flex-col gap-1">
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
             <select
-              aria-label="rating-operator"
-              className="border rounded-lg px-2"
+            aria-label="rating"
+              className="border rounded-lg px-2 py-2 w-28 bg-white"
               value={operators.rating}
               onChange={(e) => updateOperator("rating", e.target.value)}
             >
               {operatorOptions.map((op) => (
-                <option key={op}>{op}</option>
+                <option key={op.value} value={op.value}>
+                  {op.label}
+                </option>
               ))}
             </select>
 
@@ -109,6 +113,7 @@ const FiltersBar = ({ onApply, onClear }: Props) => {
               onChange={(e) => update("rating", e.target.value)}
             />
           </div>
+
           {form.rating && errors.rating && (
             <span className="text-xs text-red-500">{errors.rating}</span>
           )}
@@ -116,17 +121,19 @@ const FiltersBar = ({ onApply, onClear }: Props) => {
 
         {/* Total Time */}
         <div className="flex flex-col gap-1">
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
             <select
-              aria-label="total-time-operator"
-              className="border rounded-lg px-2"
+            aria-label="rating"
+              className="border rounded-lg px-2 py-2 w-28 bg-white"
               value={operators.total_time}
               onChange={(e) =>
                 updateOperator("total_time", e.target.value)
               }
             >
               {operatorOptions.map((op) => (
-                <option key={op}>{op}</option>
+                <option key={op.value} value={op.value}>
+                  {op.label}
+                </option>
               ))}
             </select>
 
@@ -138,6 +145,7 @@ const FiltersBar = ({ onApply, onClear }: Props) => {
               onChange={(e) => update("total_time", e.target.value)}
             />
           </div>
+
           {form.total_time && errors.total_time && (
             <span className="text-xs text-red-500">
               {errors.total_time}
@@ -147,17 +155,19 @@ const FiltersBar = ({ onApply, onClear }: Props) => {
 
         {/* Calories */}
         <div className="flex flex-col gap-1">
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
             <select
-              aria-label="calories-operator"
-              className="border rounded-lg px-2"
+            aria-label="rating"
+              className="border rounded-lg px-2 py-2 w-28 bg-white"
               value={operators.calories}
               onChange={(e) =>
                 updateOperator("calories", e.target.value)
               }
             >
               {operatorOptions.map((op) => (
-                <option key={op}>{op}</option>
+                <option key={op.value} value={op.value}>
+                  {op.label}
+                </option>
               ))}
             </select>
 
@@ -169,6 +179,7 @@ const FiltersBar = ({ onApply, onClear }: Props) => {
               onChange={(e) => update("calories", e.target.value)}
             />
           </div>
+
           {form.calories && errors.calories && (
             <span className="text-xs text-red-500">
               {errors.calories}
